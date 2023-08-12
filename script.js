@@ -1,7 +1,7 @@
 let num1 = null;
 let num2 = null;
-let currOperator = "";
 
+let currOperator = "";
 let operatorPressed = false;
 
 let displayText = document.getElementById("display-text"); 
@@ -17,10 +17,7 @@ let numbersArray = [...numbers];
 numbersArray.forEach((num) => {
 	num.addEventListener("click", () => {
 		if (!operatorPressed) {
-			displayText.textContent += num.id;
-		}
-		else {
-			operatorPressed = false;
+			displayText.textContent += num.id; } else { operatorPressed = false;
 			displayText.textContent = num.id;
 		}
 	})
@@ -28,20 +25,26 @@ numbersArray.forEach((num) => {
 
 operatorsArray.forEach((operator) => {
 	operator.addEventListener("click", () => {
-		operatorPressed = true;
-		if (!(num1 || num2)) { return; }
-		if (num1 === null) {
+		if(!operatorPressed){
 			num1 = parseInt(displayText.textContent);
 			currOperator = operator.id;
-		}
-		else {
-			num2 = parseInt(displayText.textContent);
-			num1 = operate(num1, num2, currOperator);
-			displayText.textContent = num1; 
-			currOperator = operator.id;
+			displayText.textContent = currOperator;
+			operatorPressed = true;
 			return;
 		}
-		displayText.textContent = currOperator;
+		operatorPressed = true;
+		num2 = parseInt(displayText.textContent);
+		if(num2 == 0 && currOperator == '/'){
+			alert("no dividing by zero");
+			displayText.textContent = '';
+			num1 = null;
+			num2 = null;
+			return;
+		}
+		num1 = operate(num1, num2, currOperator);
+		displayText.textContent = num1; 
+		currOperator = operator.id;
+		return;
 	})
 })
 
@@ -53,9 +56,15 @@ clear.addEventListener("click", () => {
 
 equals.addEventListener("click", () => {
 	num2 = parseInt(displayText.textContent);
-	displayText.textContent = operate(num1, num2, currOperator);
-	operatorPressed = true;
-	num1 = null;
+	if(num2 == 0 && currOperator == '/'){
+		alert("no dividing by zero");
+		displayText.textContent = '';
+		num1 = null;
+		num2 = null;
+		return;
+	}
+	displayText.textContent = isNaN(operate(num1, num2, currOperator)) ? (num1 || displayText.textContent) : operate(num1, num2, currOperator);
+	operatorPressed = false;
 	num2 = null;
 })
 
