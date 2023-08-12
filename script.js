@@ -3,6 +3,7 @@ let num2 = null;
 
 let currOperator = "";
 let operatorPressed = false;
+let isFirstDigit = true;
 
 let displayText = document.getElementById("display-text"); 
 let clear = document.getElementById("clear");
@@ -16,24 +17,25 @@ let numbersArray = [...numbers];
 
 numbersArray.forEach((num) => {
 	num.addEventListener("click", () => {
-		if (!operatorPressed) {
-			displayText.textContent += num.id; } else { operatorPressed = false;
-			displayText.textContent = num.id;
+		if (isFirstDigit) {
+			isFirstDigit = false;
+			displayText.textContent = num.id; } else {
+			displayText.textContent += num.id;
 		}
 	})
 })
 
 operatorsArray.forEach((operator) => {
 	operator.addEventListener("click", () => {
+		isFirstDigit = true;
 		if(!operatorPressed){
-			num1 = parseInt(displayText.textContent);
+			num1 = parseFloat(displayText.textContent);
 			currOperator = operator.id;
 			displayText.textContent = currOperator;
 			operatorPressed = true;
 			return;
 		}
-		operatorPressed = true;
-		num2 = parseInt(displayText.textContent);
+		num2 = parseFloat(displayText.textContent);
 		if(num2 == 0 && currOperator == '/'){
 			alert("no dividing by zero");
 			displayText.textContent = '';
@@ -55,7 +57,7 @@ clear.addEventListener("click", () => {
 })
 
 equals.addEventListener("click", () => {
-	num2 = parseInt(displayText.textContent);
+	num2 = parseFloat(displayText.textContent);
 	if(num2 == 0 && currOperator == '/'){
 		alert("no dividing by zero");
 		displayText.textContent = '';
@@ -65,6 +67,7 @@ equals.addEventListener("click", () => {
 	}
 	displayText.textContent = isNaN(operate(num1, num2, currOperator)) ? (num1 || displayText.textContent) : operate(num1, num2, currOperator);
 	operatorPressed = false;
+	num1 = parseFloat(displayText.textContent);
 	num2 = null;
 })
 
@@ -85,8 +88,8 @@ function divide(a, b){
 }
 
 function operate(a, b, operator){
-	a = parseInt(a);
-	b = parseInt(b);
+	a = parseFloat(a);
+	b = parseFloat(b);
 	
 	switch(operator){
 		case '+':
